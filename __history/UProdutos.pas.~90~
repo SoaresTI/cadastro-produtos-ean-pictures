@@ -1,0 +1,249 @@
+unit UProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.WinXPanels, Vcl.ExtCtrls,
+  Vcl.StdCtrls, Vcl.Imaging.pngimage, Vcl.DBCGrids, Vcl.DBCtrls, Data.DB,
+  Datasnap.DBClient, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
+  IdHTTP, Vcl.Mask, REST.Client, Data.Bind.Components,
+  Data.Bind.ObjectScope,System.JSON, REST.Json, REST.Types,Winapi.WinInet;
+
+type
+  Tfrm_produtos = class(TForm)
+    pnl_backgournd: TPanel;
+    cp_abas: TCardPanel;
+    cd_pesquisa: TCard;
+    pnl_pesquisa: TPanel;
+    pnl_efeito_linha: TPanel;
+    edt_pesquisa: TEdit;
+    dbg_produtos: TDBCtrlGrid;
+    pnl8: TPanel;
+    Panel3: TPanel;
+    Shape1: TShape;
+    Image1: TImage;
+    CDS_Produtos: TClientDataSet;
+    CDS_ProdutosNome: TStringField;
+    CDS_ProdutosNCM: TStringField;
+    CDS_ProdutosCEST: TStringField;
+    CDS_ProdutosMarca: TStringField;
+    CDS_Produtosimagem: TStringField;
+    CDS_Produtosvalor_venda: TCurrencyField;
+    ds: TDataSource;
+    CDS_ProdutosCodigo_Barras: TStringField;
+    IdHTTP1: TIdHTTP;
+    cd_manutencao: TCard;
+    Image2: TImage;
+    Label1: TLabel;
+    edt_descricao: TDBEdit;
+    Label2: TLabel;
+    edt_ean: TDBEdit;
+    pnl_consulta: TPanel;
+    Image4: TImage;
+    Label3: TLabel;
+    DBEdit3: TDBEdit;
+    Label4: TLabel;
+    DBEdit4: TDBEdit;
+    Label5: TLabel;
+    DBEdit5: TDBEdit;
+    Label6: TLabel;
+    edt_valor_venda: TDBEdit;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Panel6: TPanel;
+    Label7: TLabel;
+    Label8: TLabel;
+    RESTClient1: TRESTClient;
+    RESTRequest1: TRESTRequest;
+    RESTResponse1: TRESTResponse;
+    Panel1: TPanel;
+    txt_ean: TDBText;
+    Label9: TLabel;
+    DBText2: TDBText;
+    DBText3: TDBText;
+    Panel2: TPanel;
+    Label10: TLabel;
+    DBText1: TDBText;
+    pnl_novo: TPanel;
+    Image3: TImage;
+    Label11: TLabel;
+    procedure FormShow(Sender: TObject);
+    procedure dbg_produtosPaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
+    procedure FormCreate(Sender: TObject);
+    procedure pnl_consultaClick(Sender: TObject);
+    procedure Label8Click(Sender: TObject);
+    procedure pnl_novoClick(Sender: TObject);
+    procedure edt_pesquisaKeyPress(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+    function DownloadArquivo(const Origem, Destino: String): Boolean;
+  public
+    { Public declarations }
+    var
+    imagemJPG, imagemPNG : string;
+  end;
+
+var
+  frm_produtos: Tfrm_produtos;
+
+implementation
+
+{$R *.dfm}
+
+{ Tfrm_produtos }
+
+procedure Tfrm_produtos.dbg_produtosPaintPanel(DBCtrlGrid: TDBCtrlGrid;
+  Index: Integer);
+begin
+
+  if CDS_Produtos.RecordCount > 0 then
+  begin
+   Image1.Picture.LoadFromFile(CDS_Produtosimagem.AsString);
+  end;
+  ShowScrollBar(dbg_produtos.Handle, SB_VERT, False); // Remove barra Vertical
+
+end;
+
+function Tfrm_produtos.DownloadArquivo(const Origem, Destino: String): Boolean;
+const BufferSize = 1024;
+var
+  hSession, hURL: HInternet;
+  Buffer: array[1..BufferSize] of Byte;
+  BufferLen: DWORD;
+  f: File;
+  sAppName: string;
+begin
+ Result   := False;
+ sAppName := ExtractFileName(Application.ExeName);
+ hSession := InternetOpen(PChar(sAppName),
+                INTERNET_OPEN_TYPE_PRECONFIG,
+               nil, nil, 0);
+ try
+  hURL := InternetOpenURL(hSession,
+            PChar(Origem),
+            nil,0,0,0);
+  try
+   AssignFile(f, Destino);
+   Rewrite(f,1);
+   repeat
+    InternetReadFile(hURL, @Buffer,
+                     SizeOf(Buffer), BufferLen);
+    BlockWrite(f, Buffer, BufferLen)
+   until BufferLen = 0;
+   CloseFile(f);
+   Result:=True;
+  finally
+   InternetCloseHandle(hURL)
+  end
+ finally
+  InternetCloseHandle(hSession)
+ end;
+
+end;
+
+procedure Tfrm_produtos.edt_pesquisaKeyPress(Sender: TObject; var Key: Char);
+begin
+ if key = #13 then
+ begin
+  CDS_Produtos.Locate('Nome',edt_pesquisa.Text,[]);
+ end;
+end;
+
+procedure Tfrm_produtos.FormCreate(Sender: TObject);
+begin
+  dbg_produtos.DoubleBuffered:= True;
+end;
+
+procedure Tfrm_produtos.FormShow(Sender: TObject);
+begin
+  CDS_Produtos.Close;
+  CDS_Produtos.Open;
+
+  if CDS_Produtos.RecordCount = 0 then
+  begin
+   cd_manutencao.Active := true;
+   CDS_Produtos.Insert;
+
+   edt_ean.SetFocus;
+  end;
+end;
+
+procedure Tfrm_produtos.Label8Click(Sender: TObject);
+begin
+ CDS_Produtos.Append;
+ showmessage('Produto foi salvo com sucesso!');
+ CDS_Produtos.Close;
+ cd_pesquisa.Active := true;
+ CDS_Produtos.Open;
+end;
+
+procedure Tfrm_produtos.pnl_novoClick(Sender: TObject);
+begin
+ Image2.Picture := nil;
+ cp_abas.ActiveCard := cd_manutencao;
+ CDS_Produtos.Insert;
+end;
+
+procedure Tfrm_produtos.pnl_consultaClick(Sender: TObject);
+var
+ objeto : TJSONObject;
+begin
+  RESTClient1.BaseURL := 'http://www.eanpictures.com.br:9000/api/desc/';
+  RESTRequest1.Resource:='{ean}';
+  RESTRequest1.Params.AddUrlSegment('ean',edt_ean.Text);
+  RESTRequest1.Execute;
+
+
+  if RESTRequest1.Response.StatusCode = 200 then
+  begin
+    objeto := RESTResponse1.JSONValue as TJSONObject;
+    CDS_ProdutosNome.AsString  := objeto.GetValue('Nome').Value;
+    CDS_ProdutosNCM.AsString   := objeto.GetValue('Ncm').Value;
+    CDS_ProdutosCEST.AsString  := objeto.GetValue('Cest_Codigo').Value;
+    CDS_ProdutosMarca.AsString := objeto.GetValue('Marca').Value;
+  end else
+  if RESTRequest1.Response.StatusCode = 404 then
+  begin
+    showmessage('Não localizamos informações para o produto do codigo ean: '+edt_ean.Text);
+    abort;
+  end;
+
+  RESTClient1.BaseURL := 'http://www.eanpictures.com.br:9000/api/fotoexistej/';
+  RESTRequest1.Resource:='{ean}';
+  RESTRequest1.Params.AddUrlSegment('ean',edt_ean.Text);
+  RESTRequest1.Execute;
+
+  if RESTRequest1.Response.StatusCode = 200 then
+  begin
+    RESTClient1.BaseURL := 'http://www.eanpictures.com.br:9000/api/gtin/';
+    RESTRequest1.Resource:='{ean}';
+    RESTRequest1.Params.AddUrlSegment('ean',edt_ean.Text);
+    RESTRequest1.Execute;
+
+    ForceDirectories('c:\imagem\');
+
+    imagemJPG := 'c:\imagem\'+edt_ean.Text+'.jpg';
+    imagemPNG := 'c:\imagem\'+edt_ean.Text+'.png';
+
+    DeleteFile(imagemJPG);
+    DeleteFile(imagemPNG);
+
+    if DownloadArquivo('http://www.eanpictures.com.br:9000/api/gtin/'+edt_ean.Text,'c:\imagem\'+edt_ean.Text+'.png') then
+    begin
+      try
+        Image2.picture.loadfromfile(imagemPNG);
+        CDS_Produtosimagem.AsString := imagemPNG;
+      except
+        renamefile(imagemPNG,imagemJPG);
+        Image2.picture.loadfromfile(imagemJPG);
+        CDS_Produtosimagem.AsString := imagemJPG;
+      end;
+    end ;
+
+    edt_valor_venda.SetFocus;
+  end;
+end;
+
+
+end.

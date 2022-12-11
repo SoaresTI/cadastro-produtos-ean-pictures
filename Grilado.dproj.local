@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2022/12/05 22:56:07.000.833,=C:\Users\Felipe\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2022/12/05 22:57:18.000.493,C:\Users\Felipe\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\Felipe\Desktop\Grilado Software\UPrincipal.pas</Transaction>
+    <Transaction>2022/12/05 22:57:18.000.493,C:\Users\Felipe\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\Felipe\Desktop\Grilado Software\UPrincipal.dfm</Transaction>
+    <Transaction>2022/12/05 22:59:50.000.959,C:\Users\Felipe\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\Felipe\Desktop\Grilado Software\Grilado.dproj</Transaction>
+    <Transaction>2022/12/06 10:28:43.000.287,=C:\Users\Felipe\Desktop\Grilado Software\Unit2.pas</Transaction>
+    <Transaction>2022/12/06 10:28:58.000.131,C:\Users\Felipe\Desktop\Grilado Software\Unit2.dfm=C:\Users\Felipe\Desktop\Grilado Software\UProdutos.dfm</Transaction>
+    <Transaction>2022/12/06 10:28:58.000.131,C:\Users\Felipe\Desktop\Grilado Software\Unit2.pas=C:\Users\Felipe\Desktop\Grilado Software\UProdutos.pas</Transaction>
+    <Transaction>2022/12/07 15:06:36.000.038,=C:\Users\Felipe\Desktop\Grilado Software\Unit1.pas</Transaction>
+    <Transaction>2022/12/07 15:06:44.000.415,C:\Users\Felipe\Desktop\Grilado Software\Unit1.pas=C:\Users\Felipe\Desktop\Grilado Software\UUtil.pas</Transaction>
+  </Transactions>
+</BorlandProject>

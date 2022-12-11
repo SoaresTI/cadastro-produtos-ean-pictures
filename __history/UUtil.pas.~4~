@@ -1,0 +1,15 @@
+unit UUtil;
+
+interface
+
+procedure BuscaProduto (codigo_barras : string);
+
+implementation
+
+procedure BuscaProduto (codigo_barras : string);
+begin
+
+end;
+
+
+end.

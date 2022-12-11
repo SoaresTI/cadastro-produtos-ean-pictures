@@ -1,0 +1,54 @@
+unit UPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
+  Vcl.Buttons, System.ImageList, Vcl.ImgList, Vcl.StdCtrls, UProdutos;
+
+type
+  Tfrm_principal = class(TForm)
+    pnl_principal: TPanel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Image1: TImage;
+    pnl_efeito_menu: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    pnl_efeito_linha: TPanel;
+    lbl_tela: TLabel;
+    btn_git: TSpeedButton;
+    btn_inicio: TPanel;
+    img_inicio: TImage;
+    lbl_incio: TLabel;
+    btn_produtos: TPanel;
+    Image2: TImage;
+    Label1: TLabel;
+    procedure btn_inicioClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure EfeitoBotao (botao : TPanel);
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_principal: Tfrm_principal;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tfrm_principal.btn_inicioClick(Sender: TObject);
+begin
+ EfeitoBotao(btn_inicio);
+  lbl_tela.Caption := 'Inicio';
+end;
+
+procedure Tfrm_principal.EfeitoBotao(botao: TPanel);
+begin
+  pnl_efeito_menu.Top := botao.Top;
+end;
+
+end.

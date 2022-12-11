@@ -1,0 +1,67 @@
+unit UPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
+  Vcl.Buttons, System.ImageList, Vcl.ImgList, Vcl.StdCtrls, UProdutos;
+
+type
+  Tfrm_principal = class(TForm)
+    pnl_principal: TPanel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Image1: TImage;
+    btn_home: TSpeedButton;
+    btn_produto: TSpeedButton;
+    pnl_efeito_menu: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    pnl_efeito_linha: TPanel;
+    lbl_tela: TLabel;
+    btn_git: TSpeedButton;
+    procedure btn_produtoClick(Sender: TObject);
+    procedure btn_homeClick(Sender: TObject);
+    procedure btn_gitClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure EfeitoBotao (botao : TSpeedButton);
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_principal: Tfrm_principal;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tfrm_principal.btn_produtoClick(Sender: TObject);
+begin
+ EfeitoBotao(btn_produto);
+ lbl_tela.Caption := 'Produtos';
+
+ frm_produtos := Tfrm_produtos.Create(self);
+ frm_produtos.ShowModal;
+end;
+
+procedure Tfrm_principal.EfeitoBotao(botao: TSpeedButton);
+begin
+  pnl_efeito_menu.Top := botao.Top;
+end;
+
+procedure Tfrm_principal.btn_gitClick(Sender: TObject);
+begin
+ EfeitoBotao(btn_git);
+  lbl_tela.Caption := 'GitHub';
+end;
+
+procedure Tfrm_principal.btn_homeClick(Sender: TObject);
+begin
+  EfeitoBotao(btn_home);
+  lbl_tela.Caption := 'Inicial';
+end;
+
+end.

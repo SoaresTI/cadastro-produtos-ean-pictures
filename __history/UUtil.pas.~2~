@@ -1,0 +1,41 @@
+unit UUtil;
+
+interface
+
+uses
+  Vcl.Graphics;
+
+procedure GetImageByUrl(URL: string; APicture: TPicture);
+
+implementation
+
+uses
+  Vcl.Imaging.pngimage,HTTPApp,JPeg, Classes,IdHTTP,Vcl.Controls;
+
+procedure GetImageByUrl(URL: string; APicture: TPicture);
+var
+  Jpeg: TPngImage;
+  Strm: TMemoryStream;
+  vIdHTTP : TIdHTTP;
+begin
+  Screen.Cursor := crHourGlass;
+  Jpeg := TPngImage.Create;
+  Strm := TMemoryStream.Create;
+  vIdHTTP := TIdHTTP.Create(nil);
+  try
+    vIdHTTP.Get(URL, Strm);
+     if (Strm.Size &gt; 0) then
+    begin
+      Strm.Position := 0;
+      Jpeg.LoadFromStream(Strm);
+      APicture.Assign(Jpeg);
+    end;
+  finally
+    Strm.Free;
+    Jpeg.Free;
+    vIdHTTP.Free;
+    Screen.Cursor := crDefault;
+  end;
+end;
+
+end.
